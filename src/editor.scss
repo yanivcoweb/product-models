@@ -1,0 +1,59 @@
+/**
+ * Editor Styles for Product Models Block
+ */
+
+// Import frontend styles for editor preview
+@import './style.scss';
+
+// Additional editor-specific styles
+.wp-block-create-block-product-models-block {
+    // Inspector Controls Styles
+    .tab-control {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #f9f9f9;
+
+        .tab-control-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+
+            button {
+                flex: 1;
+            }
+        }
+    }
+
+    .product-images-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    // Editor-specific product item styles
+    .product-models-block {
+        .product-item {
+            border: 1px dashed #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+
+            &:hover {
+                border-color: #1e3a8a;
+            }
+        }
+    }
+}
+
+// Inspector Controls Panel Styles
+.components-panel__body {
+    .product-images-preview {
+        img {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    }
+}

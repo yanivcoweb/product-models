@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/product-models-block",
+  "version": "1.0.0",
+  "title": "Product Models",
+  "category": "widgets",
+  "icon": "products",
+  "description": "Display product models with tabs, image galleries, and accordion sections.",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "tabs": {
+      "type": "array",
+      "default": [
+        {
+          "id": "pro-models",
+          "name": "PRO Models",
+          "slug": "pro-models"
+        },
+        {
+          "id": "standard-models",
+          "name": "Standard Models",
+          "slug": "standard-models"
+        }
+      ]
+    },
+    "activeTab": {
+      "type": "string",
+      "default": "pro-models"
+    },
+    "products": {
+      "type": "array",
+      "default": []
+    }
+  },
+  "textdomain": "product-models-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}
