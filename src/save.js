@@ -1,4 +1,4 @@
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 export default function save({ attributes }) {
     const { tabs, products } = attributes;
@@ -79,7 +79,11 @@ export default function save({ attributes }) {
 
                                         {/* Product Details */}
                                         <div className="product-details">
-                                            <h2 className="product-title">{product.title}</h2>
+                                            <RichText.Content
+                                                tagName="h2"
+                                                className="product-title"
+                                                value={product.title}
+                                            />
 
                                             {/* Accordions */}
                                             <div className="accordions">
@@ -93,7 +97,10 @@ export default function save({ attributes }) {
                                                             className="accordion-header"
                                                             aria-expanded={accIndex === 0 ? 'true' : 'false'}
                                                         >
-                                                            <span>{accordion.title}</span>
+                                                            <RichText.Content
+                                                                tagName="span"
+                                                                value={accordion.title}
+                                                            />
                                                             <span className="accordion-icon">
                                                                 {accIndex === 0 ? '−' : '+'}
                                                             </span>
@@ -102,13 +109,17 @@ export default function save({ attributes }) {
                                                             className="accordion-content"
                                                             style={{ display: accIndex === 0 ? 'block' : 'none' }}
                                                         >
-                                                            {accordion.content && <p>{accordion.content}</p>}
+                                                            {accordion.content && (
+                                                                <RichText.Content
+                                                                    tagName="p"
+                                                                    value={accordion.content}
+                                                                />
+                                                            )}
                                                             {accordion.bulletPoints.length > 0 && (
-                                                                <ul>
-                                                                    {accordion.bulletPoints.map((bullet, idx) => (
-                                                                        <li key={idx}>{bullet}</li>
-                                                                    ))}
-                                                                </ul>
+                                                                <RichText.Content
+                                                                    tagName="ul"
+                                                                    value={`<li>${accordion.bulletPoints.join('</li><li>')}</li>`}
+                                                                />
                                                             )}
                                                         </div>
                                                     </div>
@@ -116,14 +127,14 @@ export default function save({ attributes }) {
                                             </div>
 
                                             {/* CTA Button */}
-                                            <a
-                                                href={product.ctaUrl}
+                                            <RichText.Content
+                                                tagName="a"
                                                 className="cta-button"
+                                                value={`${product.ctaText} →`}
+                                                href={product.ctaUrl}
                                                 target={product.ctaTarget}
                                                 rel={product.ctaTarget === '_blank' ? 'noopener noreferrer' : ''}
-                                            >
-                                                {product.ctaText} →
-                                            </a>
+                                            />
                                         </div>
                                     </div>
                                 ))

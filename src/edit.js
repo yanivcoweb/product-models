@@ -514,43 +514,72 @@ export default function Edit({ attributes, setAttributes }) {
                                     </div>
 
                                     <div className="product-details">
-                                        <h2 className="product-title">{product.title}</h2>
+                                        <RichText
+                                            tagName="h2"
+                                            className="product-title"
+                                            value={product.title}
+                                            onChange={(value) => updateProduct(product.id, { title: value })}
+                                            placeholder={__('Enter product title...', 'product-models-block')}
+                                        />
 
                                         <div className="accordions">
                                             {product.accordions.map((accordion, index) => (
                                                 <div key={accordion.id} className="accordion-item">
-                                                    <button
+                                                    <div
                                                         className="accordion-header"
                                                         onClick={() => toggleAccordion(product.id, accordion.id)}
+                                                        style={{ cursor: 'pointer' }}
                                                     >
-                                                        <span>{accordion.title}</span>
+                                                        <RichText
+                                                            tagName="span"
+                                                            value={accordion.title}
+                                                            onChange={(value) => updateAccordion(product.id, accordion.id, { title: value })}
+                                                            placeholder={__('Section title...', 'product-models-block')}
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        />
                                                         <span className="accordion-icon">
                                                             {expandedAccordion[product.id] === accordion.id ? '−' : '+'}
                                                         </span>
-                                                    </button>
+                                                    </div>
                                                     {expandedAccordion[product.id] === accordion.id && (
                                                         <div className="accordion-content">
-                                                            {accordion.content && <p>{accordion.content}</p>}
-                                                            {accordion.bulletPoints.length > 0 && (
-                                                                <ul>
-                                                                    {accordion.bulletPoints.map((bullet, idx) => (
-                                                                        <li key={idx}>{bullet}</li>
-                                                                    ))}
-                                                                </ul>
-                                                            )}
+                                                            <RichText
+                                                                tagName="p"
+                                                                value={accordion.content}
+                                                                onChange={(value) => updateAccordion(product.id, accordion.id, { content: value })}
+                                                                placeholder={__('Enter description...', 'product-models-block')}
+                                                            />
+                                                            <RichText
+                                                                tagName="ul"
+                                                                multiline="li"
+                                                                value={accordion.bulletPoints.join('<li>') ? `<li>${accordion.bulletPoints.join('</li><li>')}</li>` : ''}
+                                                                onChange={(value) => {
+                                                                    // Parse the HTML string to extract bullet points
+                                                                    const tempDiv = document.createElement('div');
+                                                                    tempDiv.innerHTML = value;
+                                                                    const listItems = tempDiv.querySelectorAll('li');
+                                                                    const bullets = Array.from(listItems).map(li => li.textContent || li.innerText);
+                                                                    updateAccordion(product.id, accordion.id, { bulletPoints: bullets });
+                                                                }}
+                                                                placeholder={__('Add bullet points...', 'product-models-block')}
+                                                            />
                                                         </div>
                                                     )}
                                                 </div>
                                             ))}
                                         </div>
 
-                                        <a
-                                            href={product.ctaUrl}
+                                        <RichText
+                                            tagName="a"
                                             className="cta-button"
-                                            target={product.ctaTarget}
-                                        >
-                                            {product.ctaText} →
-                                        </a>
+                                            value={`${product.ctaText} →`}
+                                            onChange={(value) => {
+                                                // Remove the arrow if it exists
+                                                const cleanText = value.replace(/\s*→\s*$/, '');
+                                                updateProduct(product.id, { ctaText: cleanText });
+                                            }}
+                                            placeholder={__('Button text...', 'product-models-block')}
+                                        />
                                     </div>
                                 </div>
                             ))
