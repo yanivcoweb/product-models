@@ -11,27 +11,42 @@
     .tab-navigation {
         display: flex;
         gap: 0;
-        border-bottom: 1px solid #ddd;
-        margin-bottom: 40px;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        padding-right: 1rem;
+        padding-left: 1rem;
+        border-bottom: 1px solid var(--blue);
 
         .tab-button {
+            margin-right: 5px;
             padding: 15px 30px;
-            background: transparent;
             border: none;
-            border-bottom: 3px solid transparent;
+            border-top: 1px solid var(--blue);
+            // border-bottom: 3px solid transparent;
+            border-left: 1px solid var(--blue);
+            border-right: 1px solid var(--blue);
+            background: transparent;
+            background-color: #e9e9ed;
             cursor: pointer;
             font-size: 16px;
             font-weight: 500;
-            color: #666;
+            color: var(--blue);
             transition: all 0.3s ease;
 
             &:hover {
-                color: #333;
+                background-color: #D0D0D7;
+                cursor: pointer;
             }
 
             &.active {
-                color: #1e3a8a;
-                border-bottom-color: #1e3a8a;
+                // color: #1e3a8a;
+                // border-bottom-color: #1e3a8a;
+                background-color: #f8f9fc;
+            }
+
+            &.active:hover {
+                background-color: #f8f9fc;
+                cursor: default;
             }
         }
     }
@@ -77,7 +92,7 @@
                 position: relative;
                 width: 100%;
                 padding-bottom: 75%; // 4:3 aspect ratio
-                background: #f5f5f5;
+                // background: #f5f5f5;
                 border-radius: 8px;
                 overflow: hidden;
 
@@ -99,26 +114,23 @@
 
             .nav-arrow {
                 position: absolute;
+                z-index: 10;
                 top: 50%;
-                transform: translateY(-50%);
-                background: rgba(255, 255, 255, 0.9);
-                border: 1px solid #ddd;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                cursor: pointer;
-                font-size: 24px;
-                color: #333;
+                width: 3rem;
+                height: 6rem;
+                border: 0;
+                border-radius: 0;
+                background: transparent;
+                color: var(--blue);
+                font-size: 6rem;
+                line-height: 0;
+                transform: translateY(-50%);
                 transition: all 0.3s ease;
-                z-index: 10;
+                cursor: pointer;
 
-                &:hover {
-                    background: #fff;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                }
 
                 &.prev-arrow {
                     left: 10px;
@@ -134,6 +146,7 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            justify-content: center;
 
             img {
                 width: 80px;
@@ -169,11 +182,9 @@
 
     // Product Details Section
     .product-details {
-        .product-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #1e3a8a;
-            margin: 0 0 25px 0;
+        .product-title-box {
+            font-size: 2.887rem;
+            margin: 0 0 1rem 0;
         }
 
         // Accordions
@@ -189,35 +200,37 @@
 
                 .accordion-header {
                     width: 100%;
-                    padding: 18px 0;
+                    margin-bottom: 0.5rem;
+                    padding: 0.75rem 1.5rem;
                     background: transparent;
+                    background-color: #e9e9ed;
                     border: none;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     cursor: pointer;
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: #333;
+                    font-size: 1.1rem;
+                    font-weight: 400;
+                    color: var(--blue);
                     text-align: left;
                     transition: color 0.3s ease;
 
                     &:hover {
-                        color: #1e3a8a;
+                        background-color: #D0D0D7;
+                        color: var(--blue);
                     }
 
                     .accordion-icon {
-                        font-size: 20px;
-                        font-weight: 300;
-                        color: #1e3a8a;
+                        font-size: 2rem;
+                        font-weight: 500;
+                        color: var(--blue);
                         transition: transform 0.3s ease;
+                        transform: translateY(-0.4rem);
                     }
                 }
 
                 .accordion-content {
-                    padding: 0 0 20px 0;
-                    color: #666;
-                    line-height: 1.6;
+                    padding: 1rem 1rem 2rem;
                     animation: slideDown 0.3s ease;
 
                     p {

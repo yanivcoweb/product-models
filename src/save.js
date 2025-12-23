@@ -81,7 +81,7 @@ export default function save({ attributes }) {
                                         <div className="product-details">
                                             <RichText.Content
                                                 tagName="h2"
-                                                className="product-title"
+                                                className="product-title-box"
                                                 value={product.title}
                                             />
 
@@ -129,8 +129,8 @@ export default function save({ attributes }) {
                                             {/* CTA Button */}
                                             <RichText.Content
                                                 tagName="a"
-                                                className="cta-button"
-                                                value={`${product.ctaText} →`}
+                                                className="button bg-accent"
+                                                value={`${product.ctaText}`}
                                                 href={product.ctaUrl}
                                                 target={product.ctaTarget}
                                                 rel={product.ctaTarget === '_blank' ? 'noopener noreferrer' : ''}
