@@ -73,6 +73,7 @@
         grid-template-columns: 1fr 1fr;
         gap: 40px;
         align-items: flex-start;
+        margin-bottom: 6rem;
 
         @media (max-width: 768px) {
             grid-template-columns: 1fr;
