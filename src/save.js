@@ -36,7 +36,11 @@ export default function save({ attributes }) {
                         <div className="products-container">
                             {productsByTab[tab.id] && productsByTab[tab.id].length > 0 ? (
                                 productsByTab[tab.id].map((product) => (
-                                    <div key={product.id} className="product-item">
+                                    <div
+                                        key={product.id}
+                                        className="product-item"
+                                        id={product.customId || undefined}
+                                    >
                                         {/* Product Images */}
                                         <div className="product-images">
                                             {product.images.length > 0 && (

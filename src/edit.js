@@ -95,6 +95,7 @@ export default function Edit({ attributes, setAttributes }) {
             id: `product-${Date.now()}`,
             tabId: activeEditorTab,
             title: __('New Product', 'product-models-block'),
+            customId: '',
             images: [],
             accordions: [
                 {
@@ -300,6 +301,13 @@ export default function Edit({ attributes, setAttributes }) {
                             onChange={(value) => updateProduct(product.id, { title: value })}
                         />
 
+                        <TextControl
+                            label={__('Custom ID', 'product-models-block')}
+                            value={product.customId || ''}
+                            onChange={(value) => updateProduct(product.id, { customId: value })}
+                            help={__('Optional: Add a custom ID attribute to this product container (e.g., "my-product")', 'product-models-block')}
+                        />
+
                         <SelectControl
                             label={__('Assign to Tab', 'product-models-block')}
                             value={product.tabId}
@@ -491,7 +499,11 @@ export default function Edit({ attributes, setAttributes }) {
                             />
                         ) : (
                             currentTabProducts.map((product) => (
-                                <div key={product.id} className="product-item">
+                                <div
+                                    key={product.id}
+                                    className="product-item"
+                                    id={product.customId || undefined}
+                                >
                                     <div className="product-images">
                                         {product.images.length > 0 ? (
                                             <>
