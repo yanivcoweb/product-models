@@ -56,11 +56,6 @@ export default function Edit({ attributes, setAttributes }) {
 
     // Delete tab
     const deleteTab = (index) => {
-        if (tabs.length === 1) {
-            alert(__('You must have at least one tab.', 'product-models-block'));
-            return;
-        }
-
         const tabToDelete = tabs[index];
         const productsInTab = products.filter(p => p.tabId === tabToDelete.id);
 
@@ -73,12 +68,23 @@ export default function Edit({ attributes, setAttributes }) {
         const newTabs = tabs.filter((_, i) => i !== index);
         const newProducts = products.filter(p => p.tabId !== tabToDelete.id);
 
-        setAttributes({
-            tabs: newTabs,
-            products: newProducts,
-            activeTab: newTabs[0].id
-        });
-        setActiveEditorTab(newTabs[0].id);
+        // If there are remaining tabs, set the active tab to the first one
+        if (newTabs.length > 0) {
+            setAttributes({
+                tabs: newTabs,
+                products: newProducts,
+                activeTab: newTabs[0].id
+            });
+            setActiveEditorTab(newTabs[0].id);
+        } else {
+            // If no tabs remain, set empty arrays
+            setAttributes({
+                tabs: [],
+                products: newProducts,
+                activeTab: ''
+            });
+            setActiveEditorTab('');
+        }
     };
 
     // Reorder tabs
@@ -93,7 +99,7 @@ export default function Edit({ attributes, setAttributes }) {
     const addProduct = () => {
         const newProduct = {
             id: `product-${Date.now()}`,
-            tabId: activeEditorTab,
+            tabId: tabs.length > 0 ? activeEditorTab : '',
             title: __('New Product', 'product-models-block'),
             customId: '',
             images: [],
@@ -103,6 +109,7 @@ export default function Edit({ attributes, setAttributes }) {
                     title: __('Features', 'product-models-block'),
                     content: '',
                     bulletPoints: [],
+                    contentAfter: '',
                 }
             ],
             ctaText: __('Order Now', 'product-models-block'),
@@ -176,6 +183,7 @@ export default function Edit({ attributes, setAttributes }) {
             title: __('New Section', 'product-models-block'),
             content: '',
             bulletPoints: [],
+            contentAfter: '',
         };
 
         updateProduct(productId, {
@@ -238,8 +246,10 @@ export default function Edit({ attributes, setAttributes }) {
         }));
     };
 
-    // Get products for current tab
-    const currentTabProducts = products.filter(p => p.tabId === activeEditorTab);
+    // Get products for current tab (or all products if no tabs exist)
+    const currentTabProducts = tabs.length === 0
+        ? products
+        : products.filter(p => p.tabId === activeEditorTab);
 
     return (
         <>
@@ -273,7 +283,6 @@ export default function Edit({ attributes, setAttributes }) {
                                     isDestructive
                                     isSmall
                                     onClick={() => deleteTab(index)}
-                                    disabled={tabs.length === 1}
                                 >
                                     {__('Delete', 'product-models-block')}
                                 </Button>
@@ -361,7 +370,7 @@ export default function Edit({ attributes, setAttributes }) {
                                 />
 
                                 <TextControl
-                                    label={__('Description', 'product-models-block')}
+                                    label={__('Description (Before)', 'product-models-block')}
                                     value={accordion.content}
                                     onChange={(value) => updateAccordion(product.id, accordion.id, { content: value })}
                                 />
@@ -390,6 +399,12 @@ export default function Edit({ attributes, setAttributes }) {
                                 >
                                     {__('+ Add Bullet Point', 'product-models-block')}
                                 </Button>
+
+                                <TextControl
+                                    label={__('Description (After)', 'product-models-block')}
+                                    value={accordion.contentAfter || ''}
+                                    onChange={(value) => updateAccordion(product.id, accordion.id, { contentAfter: value })}
+                                />
 
                                 {product.accordions.length > 1 && (
                                     <Button
@@ -478,17 +493,19 @@ export default function Edit({ attributes, setAttributes }) {
             <div {...useBlockProps()}>
                 <div className="product-models-block">
                     {/* Tab Navigation */}
-                    <div className="tab-navigation">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab.id}
-                                className={`tab-button ${activeEditorTab === tab.id ? 'active' : ''}`}
-                                onClick={() => setActiveEditorTab(tab.id)}
-                            >
-                                {tab.name}
-                            </button>
-                        ))}
-                    </div>
+                    {tabs.length > 0 && (
+                        <div className="tab-navigation">
+                            {tabs.map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    className={`tab-button ${activeEditorTab === tab.id ? 'active' : ''}`}
+                                    onClick={() => setActiveEditorTab(tab.id)}
+                                >
+                                    {tab.name}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Products */}
                     <div className="products-container">
@@ -542,16 +559,18 @@ export default function Edit({ attributes, setAttributes }) {
                                                         onClick={() => toggleAccordion(product.id, accordion.id)}
                                                         style={{ cursor: 'pointer' }}
                                                     >
-                                                        <RichText
-                                                            tagName="span"
-                                                            value={accordion.title}
-                                                            onChange={(value) => updateAccordion(product.id, accordion.id, { title: value })}
-                                                            placeholder={__('Section title...', 'product-models-block')}
-                                                            onClick={(e) => e.stopPropagation()}
-                                                        />
-                                                        <span className="accordion-icon">
-                                                            {expandedAccordion[product.id] === accordion.id ? '−' : '+'}
-                                                        </span>
+                                                        <div className="accordion-header-inner">
+                                                            <RichText
+                                                                tagName="span"
+                                                                value={accordion.title}
+                                                                onChange={(value) => updateAccordion(product.id, accordion.id, { title: value })}
+                                                                placeholder={__('Section title...', 'product-models-block')}
+                                                                onClick={(e) => e.stopPropagation()}
+                                                            />
+                                                            <span className="accordion-icon">
+                                                                {expandedAccordion[product.id] === accordion.id ? '−' : '+'}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                     {expandedAccordion[product.id] === accordion.id && (
                                                         <div className="accordion-content">
@@ -575,6 +594,14 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 }}
                                                                 placeholder={__('Add bullet points...', 'product-models-block')}
                                                             />
+                                                            {accordion.contentAfter && (
+                                                                <RichText
+                                                                    tagName="p"
+                                                                    value={accordion.contentAfter}
+                                                                    onChange={(value) => updateAccordion(product.id, accordion.id, { contentAfter: value })}
+                                                                    placeholder={__('Enter description after bullet points...', 'product-models-block')}
+                                                                />
+                                                            )}
                                                         </div>
                                                     )}
                                                 </div>
