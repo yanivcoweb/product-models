@@ -549,6 +549,7 @@ export default function Edit({ attributes, setAttributes }) {
                                             value={product.title}
                                             onChange={(value) => updateProduct(product.id, { title: value })}
                                             placeholder={__('Enter product title...', 'product-models-block')}
+                                            identifier={`title-${product.id}`}
                                         />
 
                                         <div className="accordions">
@@ -566,6 +567,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 onChange={(value) => updateAccordion(product.id, accordion.id, { title: value })}
                                                                 placeholder={__('Section title...', 'product-models-block')}
                                                                 onClick={(e) => e.stopPropagation()}
+                                                                identifier={`accordion-title-${product.id}-${accordion.id}`}
                                                             />
                                                             <span className="accordion-icon">
                                                                 {expandedAccordion[product.id] === accordion.id ? '−' : '+'}
@@ -579,20 +581,27 @@ export default function Edit({ attributes, setAttributes }) {
                                                                 value={accordion.content}
                                                                 onChange={(value) => updateAccordion(product.id, accordion.id, { content: value })}
                                                                 placeholder={__('Enter description...', 'product-models-block')}
+                                                                identifier={`content-${product.id}-${accordion.id}`}
                                                             />
                                                             <RichText
                                                                 tagName="ul"
                                                                 multiline="li"
-                                                                value={accordion.bulletPoints.join('<li>') ? `<li>${accordion.bulletPoints.join('</li><li>')}</li>` : ''}
+                                                                value={accordion.bulletPoints && accordion.bulletPoints.length > 0 ? `<li>${accordion.bulletPoints.join('</li><li>')}</li>` : ''}
                                                                 onChange={(value) => {
                                                                     // Parse the HTML string to extract bullet points
+                                                                    if (!value || value === '<li></li>' || value === '') {
+                                                                        updateAccordion(product.id, accordion.id, { bulletPoints: [] });
+                                                                        return;
+                                                                    }
                                                                     const tempDiv = document.createElement('div');
                                                                     tempDiv.innerHTML = value;
                                                                     const listItems = tempDiv.querySelectorAll('li');
-                                                                    const bullets = Array.from(listItems).map(li => li.textContent || li.innerText);
+                                                                    const bullets = Array.from(listItems).map(li => li.innerHTML.trim()).filter(b => b !== '');
                                                                     updateAccordion(product.id, accordion.id, { bulletPoints: bullets });
                                                                 }}
                                                                 placeholder={__('Add bullet points...', 'product-models-block')}
+                                                                identifier={`bullets-${product.id}-${accordion.id}`}
+                                                                keepPlaceholderOnFocus={true}
                                                             />
                                                             {accordion.contentAfter && (
                                                                 <RichText
@@ -600,6 +609,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                                     value={accordion.contentAfter}
                                                                     onChange={(value) => updateAccordion(product.id, accordion.id, { contentAfter: value })}
                                                                     placeholder={__('Enter description after bullet points...', 'product-models-block')}
+                                                                    identifier={`contentAfter-${product.id}-${accordion.id}`}
                                                                 />
                                                             )}
                                                         </div>
@@ -618,6 +628,7 @@ export default function Edit({ attributes, setAttributes }) {
                                                 updateProduct(product.id, { ctaText: cleanText });
                                             }}
                                             placeholder={__('Button text...', 'product-models-block')}
+                                            identifier={`cta-${product.id}`}
                                         />
                                     </div>
                                 </div>
